@@ -1,9 +1,15 @@
 from tkinter import *
 from tkinter.font import Font
 
+import requests
+
+
+resp = requests.get('https://www.typorm.com/menu/Food').json()
+
 
 def raise_frame(frame):
     frame.tkraise()
+
 
 root = Tk()
 text = Text(root)
@@ -11,7 +17,7 @@ text = Text(root)
 myFont = Font(family="Century Gothic", size=18)
 text.configure(font=myFont)
 
-catFont = Font(family="Century Gothic", size=16, weight = "bold")
+catFont = Font(family="Courier New", size=16, weight = "bold")
 infoFont = Font(family="Century Gothic", size=16, slant = "italic")
 
 food_text = '#%02x%02x%02x' % (175, 76, 89)
@@ -26,6 +32,45 @@ f5 = Frame(root, height="800", width="480", bg="bisque")
 f6 = Frame(root, height="800", width="480", bg="white")
 
 for frame in (f1, f2, f3, f4, f5, f6):
+    frame.grid(row=0, column=0, sticky='news')
+
+
+bckbutton = PhotoImage(file = "back_button2.png")
+blank = PhotoImage(file = "hot_drinks.png")
+canvas_dict = {}
+frame_dict = {}
+
+items = []
+for lst in resp['lists']:
+    
+    frame_dict[lst['name']] = Frame(root, height="800", width="480", bg="bisque")
+    canvas_dict[lst['name']] = Canvas(frame_dict[lst['name']], height=800, width=480)
+    filename = PhotoImage(file = "coffe_table2.png")
+    background_label = Label(frame_dict[lst['name']], image=filename, compound=CENTER)
+    background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+    #Status bar
+    status_label = Label(frame_dict[lst['name']], text = "Choose a drink", fg = "white", font = myFont, bg = bar_color, compound=LEFT)
+    status_label['width'] = '34'
+    status_label['height'] = '2'
+    label_button_window = canvas_dict[lst['name']].create_window(0, 0, anchor='nw', window=status_label)
+
+    #Back button
+    bck3 = Button(frame_dict[lst['name']], image = bckbutton, compound=LEFT, borderwidth=0, highlightthickness=0, border=0, command=lambda:raise_frame(f2))
+    bck_button_window3 = canvas_dict[lst['name']].create_window(4, 4, anchor='nw', window=bck3)
+
+    canvas_dict[lst['name']].grid()
+
+    items = lst['items']
+    for i, item in zip(range(len(items)), items):
+        text = item['name'] + (30-len(item['name'])) * ' ' + str(item['price'])
+        button=Button(frame_dict[lst['name']], image=blank, text=text, fg=bar_color, font=catFont, compound='right', command=lambda:raise_frame(f6), anchor='w')
+        button['border'] = '0'
+        button_window = canvas_dict[lst['name']].create_window(0, 62+i*86, anchor='nw', window=button)
+
+    canvas_dict[lst['name']].grid()
+
+for name, frame in frame_dict.items():
     frame.grid(row=0, column=0, sticky='news')
 
 
@@ -78,7 +123,7 @@ background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
 
 #Status bar
-status_label = Label(f2, text = "Choose a category", fg = "white", font = myFont, bg = bar_color, compound=LEFT)
+status_label = Label(f2, text = "Choose a drink", fg = "white", font = myFont, bg = bar_color, compound=LEFT)
 status_label['width'] = '34'
 status_label['height'] = '2'
 label_button_window = C.create_window(0, 0, anchor='nw', window=status_label)
@@ -96,31 +141,31 @@ bck_button_window_f2 = C.create_window(4, 4, anchor='nw', window=bck_f2)
 
 #Hot drinks
 hdrinks=PhotoImage(file='Hot_drinkss.png')
-hot_drinks=Button(f2,image = hdrinks, text = "Hot drinks", fg = bar_color, font = catFont, compound=CENTER, command=lambda:raise_frame(f6))
+hot_drinks=Button(f2,image = hdrinks, text = "Hot drinks", fg = bar_color, font = catFont, compound=CENTER, command=lambda:raise_frame(frame_dict['HotDrinks']))
 hot_drinks['border']='0'
 hot_drinks_window = C.create_window(0, 62, anchor='nw', window=hot_drinks)
 
 #Soft drinks
 sdrinks=PhotoImage(file='Soft_drinks.png')
-soft_drinks=Button(f2,image = sdrinks, text = "Soft drinks", fg = bar_color, font = catFont, compound=CENTER, command=lambda:raise_frame(f6))
+soft_drinks=Button(f2,image = sdrinks, text = "Soft drinks", fg = bar_color, font = catFont, compound=CENTER, command=lambda:raise_frame(frame_dict['SoftDrinks']))
 soft_drinks['border']='0'
 soft_drinks_window = C.create_window(0, 148, anchor='nw', window=soft_drinks)
 
 #Beer
 bdrinks=PhotoImage(file='beer.png')
-beer_drinks=Button(f2,image = bdrinks, text = "Beer", fg = bar_color, font = catFont, compound=CENTER, command=lambda:raise_frame(f6))
+beer_drinks=Button(f2,image = bdrinks, text = "Beer", fg = bar_color, font = catFont, compound=CENTER, command=lambda:raise_frame(frame_dict['Beer']))
 beer_drinks['border']='0'
 beer_drinks_window = C.create_window(0, 234, anchor='nw', window=beer_drinks)
 
 #Alcohol drinks
 aldrinks=PhotoImage(file='Alcohol_drinks.png')
-alcohol_drinks=Button(f2,image = aldrinks, text = "Alcohol drinks", fg = bar_color, font = catFont, compound=CENTER, command=lambda:raise_frame(f6))
+alcohol_drinks=Button(f2,image = aldrinks, text = "Alcohol drinks", fg = bar_color, font = catFont, compound=CENTER, command=lambda:raise_frame(frame_dict['AlcoholDrinks']))
 alcohol_drinks['border']='0'
 alcohol_drinks_window = C.create_window(0, 320, anchor='nw', window=alcohol_drinks)
 
 #Wine
 wdrinks=PhotoImage(file='wine.png')
-wine_drinks=Button(f2,image = wdrinks, text = "Wine", fg = bar_color, font = catFont, compound=CENTER, command=lambda:raise_frame(f4))
+wine_drinks=Button(f2,image = wdrinks, text = "Wine", fg = bar_color, font = catFont, compound=CENTER, command=lambda:raise_frame(frame_dict['Wine']))
 wine_drinks['border']='0'
 wine_drinks_window = C.create_window(0, 406, anchor='nw', window=wine_drinks)
 
@@ -150,38 +195,38 @@ bck_f3 = Button(f3, image = bckbutton2_f3, compound=LEFT, borderwidth=0, highlig
 bck_button_window_f3 = C3.create_window(4, 4, anchor='nw', window=bck_f3)
 
 #Pizza
-pizza_f3 = PhotoImage(file = "pizza.png")
+pizza_f3 = PhotoImage(file="Pizza.png")
 pizza_food=Button(f3,image = pizza_f3, text = "Pizza", fg = food_text, font = catFont, compound=CENTER, command=lambda:raise_frame(f6))
 pizza_food['border']='0'
 pizza_food_window = C3.create_window(0, 62, anchor='nw', window=pizza_food)
 
 
 #Pasta
-pasta_f3 = PhotoImage(file = "pasta.png")
+pasta_f3 = PhotoImage(file="Pasta.png")
 pasta_food=Button(f3,image = pasta_f3, text = "Pasta", fg = food_text, font = catFont, compound=CENTER, command=lambda:raise_frame(f6))
 pasta_food['border']='0'
 pasta_food_window = C3.create_window(0, 148, anchor='nw', window=pasta_food)
 
 #Salad
-salad_f3 = PhotoImage(file = "salad.png")
+salad_f3 = PhotoImage(file="Salad.png")
 salad_food=Button(f3,image = salad_f3, text = "Salad", fg = food_text, font = catFont, compound=CENTER, command=lambda:raise_frame(f6))
 salad_food['border']='0'
 salad_food_window = C3.create_window(0, 234, anchor='nw', window=salad_food)
 
 #Soups
-soups_f3 = PhotoImage(file = "soups.png")
+soups_f3 = PhotoImage(file="Soups.png")
 soups_food=Button(f3,image = soups_f3, text = "Soups", fg = food_text, font = catFont, compound=CENTER, command=lambda:raise_frame(f6))
 soups_food['border']='0'
 soups_food_window = C3.create_window(0, 320, anchor='nw', window=soups_food)
 
 #Desserts
-deserts_f3 = PhotoImage(file = "Deserts.png")
+deserts_f3 = PhotoImage(file="Deserts.png")
 desserts_food=Button(f3,image = deserts_f3, text = "Desserts", fg = food_text, font = catFont, compound=CENTER, command=lambda:raise_frame(f6))
 desserts_food['border']='0'
 desserts_food_window = C3.create_window(0, 406, anchor='nw', window=desserts_food)
 
 #Grilled
-grilled_f3 = PhotoImage(file = "grilled.png")
+grilled_f3 = PhotoImage(file="Grilled.png")
 grilled_food=Button(f3,image = grilled_f3, text = "Grilled", fg = food_text, font = catFont, compound=CENTER, command=lambda:raise_frame(f6))
 grilled_food['border']='0'
 grilled_food_window = C3.create_window(0, 492, anchor='nw', window=grilled_food)
@@ -229,7 +274,7 @@ status_label_f5['width'] = '33'
 status_label_f5['height'] = '2'
 label_button_window_f5 = C5.create_window(0, 0, anchor='nw', window=status_label_f5)
 
-emple_photo = PhotoImage(file = "emple_team.png")
+emple_photo = PhotoImage(file = "Emple_team.png")
 emple_team = Label(f5, bg = "bisque", image = emple_photo, compound = CENTER)
 emple_team['height'] = '1'
 emple_team.place(x=1, y=120, relwidth=1, relheight=1)
@@ -264,6 +309,10 @@ wtr_button_window_f6 = C6.create_window(130, 260, anchor='nw', window=wtr_f6)
 
 
 C6.grid()
+
+
+#################################################################################################################################################
+
 
 
 raise_frame(f1)
