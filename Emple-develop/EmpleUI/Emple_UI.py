@@ -4,6 +4,7 @@ from tkinter.font import Font
 import requests
 
 
+
 resp = requests.get('https://www.typorm.com/menu/Food').json()
 
 
@@ -12,6 +13,7 @@ def raise_frame(frame):
 
 
 root = Tk()
+root.attributes('-fullscreen', True)
 text = Text(root)
 
 myFont = Font(family="Century Gothic", size=18)
