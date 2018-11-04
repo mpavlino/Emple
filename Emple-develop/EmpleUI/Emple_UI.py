@@ -5,10 +5,17 @@ import requests
 
 
 resp = requests.get('https://www.typorm.com/menu/Food').json()
+uid = 1
 
 
-def raise_frame(frame):
+def raise_frame(frame, endpoint=None):
+    global uid
     frame.tkraise()
+
+    if endpoint is not None:
+        req = requests.post('https://www.typorm.com/orderitem')
+        uid += 1
+
 
 
 root = Tk()
@@ -64,7 +71,7 @@ for lst in resp['lists']:
     items = lst['items']
     for i, item in zip(range(len(items)), items):
         text = item['name'] + (30-len(item['name'])) * ' ' + str(item['price'])
-        button=Button(frame_dict[lst['name']], image=blank, text=text, fg=bar_color, font=catFont, compound='right', command=lambda:raise_frame(f6), anchor='w')
+        button=Button(frame_dict[lst['name']], image=blank, text=text, fg=bar_color, font=catFont, compound='right', command=lambda:raise_frame(f6, 1), anchor='w')
         button['border'] = '0'
         button_window = canvas_dict[lst['name']].create_window(0, 62+i*86, anchor='nw', window=button)
 
