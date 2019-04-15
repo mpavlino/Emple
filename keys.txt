@@ -1,0 +1,22 @@
+webAPI
+c1d8c3d1-780a-474e-a22f-d7a2f1137c18
+
+
+
+
+
+webAPI-customAPI
+AppID: fa7c8272-f22a-4eb6-8bca-5fe4736d920d	
+key: svbfGEuc0cALqIizwH8TTx1PfBTsCN7zQ8SfrjRZ7+E=
+
+
+
+https://customconnectorapi2.azurewebsites.net
+https://login.microsoftonline.com/02b8a0b1-10e5-4acb-9929-b2ac3b5cbc9d
+
+
+
+nPY3YePOcirukqPDIl0nplnByfzsRBU/jodXeEsVmzM=
+
+
+<customErrors mode="RemoteOnly" defaultRedirect="mycustompage.htm"/>
